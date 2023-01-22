@@ -1,0 +1,16 @@
+{
+    "Verbose": true,
+    "Requests": [
+        {
+            "Group": "Sample",
+            "Name": "Test",
+            "IsActive": true,
+            "Verb": "GET",
+            "URL": "https://google.com",
+            "Headers": {},
+            "SSLVerify": false,
+            "Payload": {},
+            "Output": "output.html"
+        }
+    ]
+}
