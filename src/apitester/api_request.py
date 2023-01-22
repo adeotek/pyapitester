@@ -1,10 +1,12 @@
 import json
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from urllib3 import disable_warnings
+from urllib3.exceptions import InsecureRequestWarning
+from requests import request as requests_request
+from requests.exceptions import ConnectionError
 import apitester.app_logger as app_logger
 
 
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+disable_warnings(InsecureRequestWarning)
 
 
 class ApiRequest():
@@ -70,12 +72,12 @@ class ApiRequest():
                 body = json.dumps(self.payload)
                 self.__logger.cdebug(('Body:', 'yellow'), (json.dumps(self.payload, indent=4), 'cyan'))
         try:
-            self.response = requests.request(self.verb, self.url, headers=self.headers, verify=self.sslVerify, data=body)
+            self.response = requests_request(self.verb, self.url, headers=self.headers, verify=self.sslVerify, data=body)
             if self.response.status_code == 200:
                 self.__logger.clog(('Response: ', 'green'), (self.verb, 'cyan'), '(', (self.url, 'cyan'), ') Status code: [', (self.response.status_code, 'green'), ']')
             else:
                 self.__logger.clog(('Response: ', 'red'), (self.verb, 'cyan'), '(', (self.url, 'cyan'), ') Status code: [', (self.response.status_code, 'magenta'), ']')
-        except (ValueError, requests.exceptions.ConnectionError) as err:
+        except (ValueError, ConnectionError) as err:
             self.response = None
             self.__logger.clog(('ERROR: [', 'red'), (str(err.errno), 'magenta'), ('] ' + str(err), 'red'))
         if printResponse:
