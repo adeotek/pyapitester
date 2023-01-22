@@ -39,7 +39,7 @@ class ApiRequest():
 
     def printResponse(self) -> None:
         if self.response is None:
-            self.__logger.clog(('No response!', 'grey'))
+            self.__logger.clog(('No response!', 'red'))
             if isinstance(self.output, str) and self.output != '':
                 outputFile = open(self.output, "w")
                 outputFile.write('')
@@ -55,7 +55,7 @@ class ApiRequest():
                 outputFile.write(output)
                 outputFile.close()
             else:
-                self.__logger.clog((output, 'grey'))
+                self.__logger.log(output)
 
     def execute(self, printResponse: bool = True):
         self.__logger.cdebug(('Request ', 'yellow'), (self.verb, 'cyan'), ('(', 'yellow'), (self.url, 'cyan'), (')...', 'yellow'))
