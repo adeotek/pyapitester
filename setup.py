@@ -9,7 +9,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pyopstools',
-    version='0.1.3',
+    version='0.2.1',
     author='George Benjamin-Schonberger',
     author_email='<george.benjamin@gmail.com>',
     description='DevOps CLI tools',
