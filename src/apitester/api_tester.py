@@ -40,6 +40,10 @@ def get_request_title(req: dict) -> tuple:
 
 def execute_request(req: dict) -> None:
     global logger
+    if req['Verb'] not in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']:
+        logger.new_line() \
+            .clog(('Invalid verb `', 'red'), (req['Verb'], 'magenta'), ('` provided!', 'red')).new_line()
+        return
     if 'Output' in req.keys() and isinstance(req['Output'], str) and req['Output'] != '':
         output_file_name = get_full_path(req['Output'])
     else:
@@ -67,7 +71,8 @@ def init(config) -> bool:
     config_file_name = get_full_path(config)
     if not os.path.exists(config_file_name):
         logger = app_logger.Logger()
-        logger.new_line().clog(('No `', 'red'), ('configuration.json', 'magenta'), ('` file provided!', 'red')).new_line()
+        logger.new_line()\
+            .clog(('No `', 'red'), ('configuration.json', 'magenta'), ('` file provided!', 'red')).new_line()
         return False
     config_file = open(config_file_name)
     configuration = json.load(config_file)
@@ -79,7 +84,7 @@ def init(config) -> bool:
 
 def run(config) -> None:
     global logger, configuration
-    print('Starting API tester v', _version.__version__, '...')
+    print('Starting API tester v', _version.__version__, ' ...', sep='')
     if init(config):
         for req in configuration['Requests']:
             if get_dict_attr(req, 'IsActive', True):
@@ -90,7 +95,7 @@ def run(config) -> None:
 
 def direct_run(req: dict) -> None:
     global logger
-    print('Starting API tester v', _version.__version__, '...')
+    print('Starting API tester v', _version.__version__, ' ...', sep='')
     logger = app_logger.Logger()
     execute_request(req)
 

@@ -59,9 +59,39 @@ def wpost(url, payload, ssl_verify, output) -> None:
     })
 
 
+@click.command()
+@click.argument('verb')
+@click.argument('url')
+@click.option('--payload', default=None, help='JSON payload')
+@click.option('--ssl-verify', default=True, help='SSL Verify flag')
+@click.option('--output', default=None, help='Output file')
+def wcall(verb, url, payload, ssl_verify, output) -> None:
+    if payload:
+        if os.path.exists(payload):
+            payload_file = open(payload)
+            payload = json.load(payload_file)
+            payload_file.close()
+    else:
+        payload = {}
+    api_tester.direct_run({
+        'Group': None,
+        'Name': url,
+        'IsActive': True,
+        'Verb': verb.upper(),
+        'URL': url,
+        'Headers': {
+            'ContentType': 'application/json'
+        },
+        'SSLVerify': ssl_verify,
+        'Payload': payload,
+        'Output': output
+    })
+
+
 cli.add_command(apitester)
 cli.add_command(wget)
 cli.add_command(wpost)
+cli.add_command(wcall)
 
 
 if __name__ == '__main__':
