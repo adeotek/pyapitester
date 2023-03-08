@@ -2,7 +2,6 @@ from colorama import just_fix_windows_console
 from typing import Any
 from termcolor import colored, cprint, COLORS
 
-
 just_fix_windows_console()
 
 
@@ -12,16 +11,16 @@ class Logger:
     def __init__(self, verbose: bool = False) -> None:
         self.__verbose = verbose
 
-    def setVerbose(self, value: bool):
+    def set_verbose(self, value: bool):
         self.__verbose = value
         return self
 
-    def newLine(self):
+    def new_line(self):
         print()
         return self
 
     def log(self, *values: object, **kwargs: Any):
-        print(*values, sep="", **kwargs)
+        print(*values, sep='', **kwargs)
         return self
 
     def debug(self, *values: object, **kwargs: Any):
@@ -47,9 +46,9 @@ class Logger:
     def cprint(
         self,
         text: str,
-        color = None,
-        on_color = None,
-        attrs = None,
+        color=None,
+        on_color=None,
+        attrs=None,
         **kwargs: Any,
     ):
         cprint(text=text, color=color, on_color=on_color, attrs=attrs, **kwargs)
