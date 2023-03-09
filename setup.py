@@ -9,7 +9,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pyopstools',
-    version='0.3.0',
+    version="0.3.1",
     author='George Benjamin-Schonberger',
     author_email='<george.benjamin@gmail.com>',
     description='DevOps CLI tools',
@@ -19,7 +19,7 @@ setup(
     url='https://github.com/adeotek/pyopstools',
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
-    python_requires = '>=3.7',
+    python_requires='>=3.7',
     install_requires=[
         'colorama',
         'termcolor',

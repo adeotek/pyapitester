@@ -1,6 +1,5 @@
 import os
 import json
-import apitester._version as _version
 import apitester.custom_auth_token as custom_auth_token
 import apitester.app_logger as app_logger
 import apitester.api_request as api_request
@@ -82,21 +81,22 @@ def init(config) -> bool:
     return True
 
 
-def run(config) -> None:
+def run(config, version: str) -> None:
     global logger, configuration
-    print('Starting API tester v', _version.__version__, ' ...', sep='')
-    if init(config):
-        for req in configuration['Requests']:
-            if get_dict_attr(req, 'IsActive', True):
-                logger.new_line().clog(*get_request_title(req))
-                execute_request(req)
+    if not init(config):
+        return
+    logger.clog(('Starting API tester ', 'white'), ('v' + version, 'green'), (' ...', 'white')).new_line()
+    for req in configuration['Requests']:
+        if get_dict_attr(req, 'IsActive', True):
+            logger.new_line().clog(*get_request_title(req))
+            execute_request(req)
     logger.new_line().clog(('DONE!', 'green'))
 
 
-def direct_run(req: dict) -> None:
+def direct_run(req: dict, version: str) -> None:
     global logger
-    print('Starting API tester v', _version.__version__, ' ...', sep='')
     logger = app_logger.Logger()
+    logger.clog(('Starting API tester ', 'white'), ('v' + version, 'green'), (' ...', 'white')).new_line()
     execute_request(req)
 
 
