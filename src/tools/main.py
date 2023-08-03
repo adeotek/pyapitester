@@ -95,26 +95,27 @@ def wcall(verb, url, payload, headers, ssl_verify, output) -> None:
 
 @click.command()
 @click.argument('target-path')
-@click.option('--file-extensions', default=None, help='Include only files with these extensions (coma-separated list)')
-@click.option('--exclude-dirs', default=None, help='Exclude sub-directories (coma-separated list)')
-@click.option('--check-only', is_flag=True, default=False, help="Don't change anything, just check  (flag)")
-@click.option('--add-bom', is_flag=True, default=False, help='Add BOM instead removing it (flag)')
+@click.option('--file-extensions', '-f', default=None,
+              help='Include only files with these extensions (coma-separated list)')
+@click.option('--skip-dirs', '-s', default=None, help='Skip sub-directories (coma-separated list)')
+@click.option('--check-only', '-c', is_flag=True, default=False, help="Don't change anything, just check  (flag)")
+@click.option('--add-bom', '-a', is_flag=True, default=False, help='Add BOM instead removing it (flag)')
 @click.option('--verbose', '-v', is_flag=True, default=False, help='Verbose mode (flag)')
-def utf8bom(target_path: str, file_extensions, exclude_dirs, check_only: bool, add_bom: bool, verbose: bool) -> None:
+def utf8bom(target_path: str, file_extensions, skip_dirs, check_only: bool, add_bom: bool, verbose: bool) -> None:
     file_extensions_list = []
-    exclude_dirs_list = []
+    skip_dirs_list = []
     if isinstance(file_extensions, str) and file_extensions != '':
         for ext in file_extensions.split(','):
             if isinstance(ext, str) and ext != '' and ext.strip('* ').startswith('.'):
                 file_extensions_list.append(ext.strip('* '))
-    if isinstance(exclude_dirs, str) and exclude_dirs != '':
-        for sub_dir in exclude_dirs.split(','):
+    if isinstance(skip_dirs, str) and skip_dirs != '':
+        for sub_dir in skip_dirs.split(','):
             if isinstance(sub_dir, str) and sub_dir.strip(' ') != '':
-                exclude_dirs_list.append(sub_dir.strip(' '))
+                skip_dirs_list.append(sub_dir.strip(' '))
     fileencoding.file_encoding.convert_utf8_bom({
         'TargetPath': target_path,
         'FileExtensions': file_extensions_list,
-        'ExcludeDirs': exclude_dirs_list,
+        'SkipDirs': skip_dirs_list,
         'CheckOnly': check_only,
         'AddBom': add_bom,
         'Verbose': verbose
