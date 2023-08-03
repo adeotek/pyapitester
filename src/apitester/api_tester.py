@@ -101,4 +101,4 @@ def direct_run(req: dict, version: str) -> None:
 
 
 if __name__ == '__main__':
-    run('configuration.json')
+    run('configuration.json', 'N/A')

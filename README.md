@@ -7,6 +7,7 @@ A collection of DevOps CLI tools written in Python
 ## Available tools
 
 - `apitester` - A simple API tester where the requests are configured in a JSON file (see `configuration.sample.json` sample configuration)
+- `encodings` - File encoding converter
 
 ## Setup
 

@@ -9,7 +9,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pyopstools',
-    version="0.3.1",
+    version="0.4.0",
     author='George Benjamin-Schonberger',
     author_email='<george.benjamin@gmail.com>',
     description='DevOps CLI tools',
@@ -24,7 +24,8 @@ setup(
         'colorama',
         'termcolor',
         'requests',
-        'click'
+        'click',
+        'charset-normalizer'
     ],
     extras_require={
         'dev': ['check-manifest'],
