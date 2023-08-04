@@ -95,13 +95,16 @@ def wcall(verb, url, payload, headers, ssl_verify, output) -> None:
 
 @click.command()
 @click.argument('target-path')
+@click.option('--add-bom', '-a', is_flag=True, default=False, help='Add BOM (flag)')
+@click.option('--remove-bom', '-r', is_flag=True, default=False, help='Remove BOM (flag)')
 @click.option('--file-extensions', '-f', default=None,
               help='Include only files with these extensions (coma-separated list)')
 @click.option('--skip-dirs', '-s', default=None, help='Skip sub-directories (coma-separated list)')
-@click.option('--check-only', '-c', is_flag=True, default=False, help="Don't change anything, just check  (flag)")
-@click.option('--add-bom', '-a', is_flag=True, default=False, help='Add BOM instead removing it (flag)')
+@click.option('--check-only', '-c', is_flag=True, default=False,
+              help='Check only, do not change anything (flag)')
 @click.option('--verbose', '-v', is_flag=True, default=False, help='Verbose mode (flag)')
-def utf8bom(target_path: str, file_extensions, skip_dirs, check_only: bool, add_bom: bool, verbose: bool) -> None:
+def utf8bom(target_path: str, add_bom: bool, remove_bom: bool, file_extensions, skip_dirs,
+            check_only: bool, verbose: bool) -> None:
     file_extensions_list = []
     skip_dirs_list = []
     if isinstance(file_extensions, str) and file_extensions != '':
@@ -116,8 +119,8 @@ def utf8bom(target_path: str, file_extensions, skip_dirs, check_only: bool, add_
         'TargetPath': target_path,
         'FileExtensions': file_extensions_list,
         'SkipDirs': skip_dirs_list,
-        'CheckOnly': check_only,
-        'AddBom': add_bom,
+        'CheckOnly': check_only or (not add_bom and not remove_bom) or (add_bom and remove_bom),
+        'AddBom': add_bom and not remove_bom,
         'Verbose': verbose
     }, version=__version__)
 

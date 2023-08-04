@@ -1,18 +1,19 @@
 import os
 from typing import List
 from charset_normalizer import detect
-import fileencoding.app_logger as app_logger
+from helpers.app_logger import Logger
+from helpers.dict_helpers import get_dict_attr, get_dict_bool, get_dict_list
 
-logger: app_logger.Logger
+logger: Logger
 
 
 def convert_encoding(file, source_encoding: str, target_encoding: str) -> None:
     global logger
     try:
-        with open(file, "w+b") as fp:
-            fs = fp.read()
-            nfs = fs.decode(source_encoding).encode(target_encoding)
-            fp.write(nfs)
+        with open(file, mode="r", encoding=source_encoding) as sfp:
+            data = sfp.read()
+        with open(file, mode="w", encoding=target_encoding) as fp:
+            fp.write(data)
         logger.clog((file, 'cyan'), ': ', (source_encoding.upper(), 'yellow'), (' -> ', 'magenta'),
                     (target_encoding.upper(), 'magenta'), (' OK', 'green'))
     except (ValueError, UnicodeError, UnicodeDecodeError, UnicodeEncodeError) as error:
@@ -42,7 +43,7 @@ def process_file(file, add_bom: bool = False, check_only: bool = False) -> None:
     else:
         if check_only:
             logger.clog((file, 'cyan'), ': ', (source_encoding.upper(), 'yellow'), (' -> ', 'magenta'),
-                        (target_encoding.upper(), 'magenta'))
+                        (target_encoding.upper(), 'magenta'), ' - NOT CHANGED')
         else:
             convert_encoding(file, source_encoding, target_encoding)
 
@@ -67,25 +68,17 @@ def process_dir(path, file_extensions: List[str] = (), skip_dirs: List[str] = ()
 
 def convert_files_encoding(req: dict) -> None:
     global logger
-    if not isinstance(req['TargetPath'], str) or req['TargetPath'] == '' or not os.path.exists(req['TargetPath']):
-        logger.new_line() .clog(('Invalid target path `', 'red'), (req['TargetPath'], 'magenta'),
+    target_path = get_dict_attr(req, 'TargetPath')
+    if not isinstance(target_path, str) or target_path == '' or not os.path.exists(target_path):
+        logger.new_line() .clog(('Invalid target path `', 'red'), (target_path, 'magenta'),
                                 ('` provided!', 'red')).new_line()
         return
-    if isinstance(req['FileExtensions'], List):
-        file_extensions = req['FileExtensions']
-    else:
-        file_extensions = []
-    if isinstance(req['SkipDirs'], List):
-        skip_dirs = req['SkipDirs']
-    else:
-        skip_dirs = []
-    check_only = isinstance(req['CheckOnly'], bool) and req['CheckOnly']
-    add_bom = isinstance(req['AddBom'], bool) and req['AddBom']
-    process_dir(req['TargetPath'], file_extensions, skip_dirs, add_bom, check_only)
+    process_dir(target_path, get_dict_list(req, 'FileExtensions'), get_dict_list(req, 'SkipDirs'),
+                get_dict_bool(req, 'AddBom'), get_dict_bool(req, 'CheckOnly'))
 
 
 def convert_utf8_bom(req: dict, version: str) -> None:
     global logger
-    logger = app_logger.Logger(verbose=isinstance(req['Verbose'], bool) and req['Verbose'])
+    logger = Logger(verbose=get_dict_bool(req, 'Verbose'))
     logger.clog(('Starting Encoding Converter ', 'white'), ('v' + version, 'green'), (' ...', 'white')).new_line()
     convert_files_encoding(req)

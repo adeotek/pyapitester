@@ -5,13 +5,13 @@ from urllib3 import disable_warnings
 from urllib3.exceptions import InsecureRequestWarning
 from requests import request as requests_request
 from requests.exceptions import ConnectionError
-import apitester.app_logger as app_logger
+from helpers.app_logger import Logger
 
 disable_warnings(InsecureRequestWarning)
 
 
 class ApiRequest:
-    __logger: app_logger.Logger
+    __logger: Logger
     verb: str
     url: str
     headers: dict
@@ -24,10 +24,10 @@ class ApiRequest:
                  logger=None) -> None:
         if headers is None:
             headers = {}
-        if isinstance(logger, app_logger.Logger):
+        if isinstance(logger, Logger):
             self.__logger = logger
         else:
-            self.__logger = app_logger.Logger(False)
+            self.__logger = Logger(False)
         self.verb = verb
         self.url = url
         self.headers = headers

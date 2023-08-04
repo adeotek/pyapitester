@@ -1,25 +1,13 @@
 import os
 import json
+from helpers.app_logger import Logger
+from helpers.path_helpers import get_full_path
+from helpers.dict_helpers import get_dict_attr
 import apitester.custom_auth_token as custom_auth_token
-import apitester.app_logger as app_logger
 import apitester.api_request as api_request
 
-logger: app_logger.Logger
+logger: Logger
 configuration: dict
-
-
-def get_dict_attr(data: dict, key: str, default=None):
-    if key in data.keys():
-        return data[key]
-    else:
-        return default
-
-
-def get_full_path(input_path: str) -> str:
-    if os.path.isabs(input_path):
-        return input_path
-    else:
-        return os.path.join(os.getcwd(), input_path)
 
 
 def get_request_title(req: dict) -> tuple:
@@ -69,7 +57,7 @@ def init(config) -> bool:
     # load configuration
     config_file_name = get_full_path(config)
     if not os.path.exists(config_file_name):
-        logger = app_logger.Logger()
+        logger = Logger()
         logger.new_line()\
             .clog(('No `', 'red'), ('configuration.json', 'magenta'), ('` file provided!', 'red')).new_line()
         return False
@@ -77,7 +65,7 @@ def init(config) -> bool:
     configuration = json.load(config_file)
     config_file.close()
     # initialize logger
-    logger = app_logger.Logger(configuration['Verbose'])
+    logger = Logger(configuration['Verbose'])
     return True
 
 
@@ -95,7 +83,7 @@ def run(config, version: str) -> None:
 
 def direct_run(req: dict, version: str) -> None:
     global logger
-    logger = app_logger.Logger()
+    logger = Logger()
     logger.clog(('Starting API tester ', 'white'), ('v' + version, 'green'), (' ...', 'white')).new_line()
     execute_request(req)
 
