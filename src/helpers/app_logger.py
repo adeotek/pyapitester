@@ -15,6 +15,9 @@ class Logger:
         self.__verbose = value
         return self
 
+    def is_verbose(self) -> bool:
+        return self.__verbose
+
     def new_line(self):
         print()
         return self
