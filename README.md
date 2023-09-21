@@ -7,21 +7,22 @@ A collection of DevOps CLI tools written in Python
 ## Available tools
 
 - `apitester` - A simple API tester where the requests are configured in a JSON file (see `configuration.sample.json` sample configuration)
-- `encodings` - File encoding converter
+- `dockerct` - Docker Containers management tool (create, update, remove)
+- `utf8bom` - UTF8 file encoding converter
 
 ## Setup
 
 ### Install `venv` module
 
 ```powershell
-pip3.9 install virtualenv
+pip3 install virtualenv
 ```
 
 ### Create environment
 
 ```powershell
 # cd project_path
-python3.9 -m venv env
+python3 -m venv env
 ```
 
 ### Activate environment

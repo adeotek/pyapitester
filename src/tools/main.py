@@ -6,6 +6,7 @@ from . import __version__
 from tools.custom_decorators import add_version
 import apitester.api_tester
 import fileencoding.file_encoding
+import dockertools.docker_containers
 
 
 @click.group()
@@ -125,11 +126,27 @@ def utf8bom(target_path: str, add_bom: bool, remove_bom: bool, file_extensions, 
     }, version=__version__)
 
 
+@click.command()
+@click.argument('image')
+@click.option('--dry-run', is_flag=True, default=False,
+              help='Do not change anything, just print the actions to be taken (flag)')
+@click.option('--verbose', '-v', is_flag=True, default=False, help='Verbose mode (flag)')
+def dockerct(image: str, 
+            dry_run: bool, verbose: bool) -> None:
+    
+    dockertools.docker_containers.run_action({
+        'Image': image,
+        'DryRun': dry_run,
+        'Verbose': verbose
+    }, version=__version__)
+
+
 cli.add_command(apitester)
 cli.add_command(wget)
 cli.add_command(wpost)
 cli.add_command(wcall)
 cli.add_command(utf8bom)
+cli.add_command(dockerct)
 
 
 if __name__ == '__main__':
